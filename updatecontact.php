@@ -84,7 +84,6 @@ $job_contact_phones = get_contact_phones($job_contact["email"]);
       <input type="submit" value="Save" />
       <input type="hidden" name="processing" value=true />
       <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
-      <input type="hidden" name="phone_count" value="<?php echo $phone_count; ?>">
       <input type="hidden" name="email" value="<?php echo $job_contact["email"]; ?>">
     </form>
   </div>

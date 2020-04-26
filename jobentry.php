@@ -109,6 +109,11 @@ $job_company = get_job_company($this_jid);
       <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
     </form>
 
+     <form action="addevents.php" method="post">
+      <input type="submit" name="detailbtn" value="Add" class="btn btn-primary" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form>
+
     <div class="container">
       <h3> Upcoming events </h3>
 

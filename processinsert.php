@@ -3,10 +3,13 @@
 function add_event($jid, $event, $date) {
 	global $db;
 	$query = "INSERT INTO job_application_important_dates
+				  (jid,
+				  event,
+				  date)
 			  VALUES
-			  	  jid = :jid,
-			  	  event = :event,
-			  	  date = :date";
+			  	  (:jid,
+			  	  :event,
+			  	  :date)";
 	$statement = $db->prepare($query);
 	$statement->bindValue(":jid", $jid);
 	$statement->bindValue(":event", $event);
@@ -19,18 +22,28 @@ function add_event($jid, $event, $date) {
 
 function add_application($status, $job_title, $salary, $benefits, $location_street, $location_city, $location_state, $job_requirements, $aid, $hiring_contact_email) {
 	global $db;
-	$query = "UPDATE job_application
-			  SET
-			  	  status = :status,
-			  	  job_title = :job_title,
-			  	  salary = :salary,
-			  	  benefits = :benefits,
-			  	  location_street = :location_street,
-			  	  location_city = :location_city,
-			  	  location_state = :location_state,
-			  	  job_requirements = :job_requirements
-			  WHERE
-			  	  JID = :jid";
+	$query = "INSERT INTO job_application
+				  (status,
+				  job_title,
+				  salary,
+				  benefits,
+				  location_street,
+				  location_city,
+				  location_state,
+				  job_requirements,
+				  AID,
+				  hiring_contact_email)
+			  VALUES
+			  	  (:status,
+			  	  :job_title,
+			  	  :salary,
+			  	  :benefits,
+			  	  :location_street,
+			  	  :location_city,
+			  	  :location_state,
+			  	  :job_requirements,
+			  	  :aid,
+			  	  :hiring_contact_email)";
 	$statement = $db->prepare($query);
 	$statement->bindValue(":status", $status);
 	$statement->bindValue(":job_title", $job_title);
@@ -46,5 +59,5 @@ function add_application($status, $job_title, $salary, $benefits, $location_stre
 	$statement->execute();
 
 	$statement->closeCursor();
-
+}
 ?>

@@ -1,16 +1,26 @@
 <?php
-session_start();
 require("connectdb.php");
 require("processdb.php");
+require("processinsert.php");
 
-$jobs = get_all_jobs($_SESSION["AID"]);
+$msg = "";
+
+if (!empty($_POST["job"]))
+  $this_jid = $_POST["job"];
+else
+  echo "Something went wrong";
+
+if (!empty($_POST["processing"])) {
+  add_event($this_jid, $_POST["event"], $_POST["date"]);
+  $msg = "Successfully created new event";
+}
 ?>
 
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">  
+  <meta charset="UTF-8">
   
   <!-- 2. include meta tag to ensure proper rendering and touch zooming -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,13 +35,7 @@ $jobs = get_all_jobs($_SESSION["AID"]);
   <meta name="author" content="your name">
   <meta name="description" content="include some description about your page">  
     
-  <title>Your Job Applications</title>
-
-  <div class="container">
-  <form action="mainpage.php">
-      <input type="submit" value="Back to Dashboard" />
-  </form>
-  </div>
+  <title>Add An Event</title>.
   
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -52,48 +56,30 @@ $jobs = get_all_jobs($_SESSION["AID"]);
 
 <body>
 <div class="container">
-  <h1>Your Job Applications</h1>
-
-  <form action="addapplication.php">
-      <input type="submit" name="detailbtn" value="Add New Application" class="btn btn-primary" />
-    </form>
+  <h1>Add An Event</h1><br/>
 
   <div class="container">
-  	<table border="1" width="60%">
-	  <tr>
-	    <th>Job Title</th>
-	    <th>Status</th>
-	    <th>Company</th>
-	    <th>Salary</th>
-	    <th>&nbsp</th>
-	  </tr>
-	<?php foreach ($jobs as $job): ?>
-	  <tr>
-	  	<td>
-	  		<?php echo $job["job_title"]; ?>
-	  	</td>
-	  	<td>
-	  		<?php echo $job["status"]; ?>
-	  	</td>
-	  	<td>
-	  		<?php echo get_job_company($job["JID"])["company_name"]; ?>
-	  	</td>
-	  	<td>
-	  		<?php echo $job["salary"]; ?>
-	  	</td>
-        <td>
-          <form action="jobentry.php" method="post">
-            <input type="submit" name="detailbtn" value="View Details" class="btn btn-primary" />
-            <input type="hidden" name="job" value="<?php echo $job["JID"] ?>" />
-          </form> 
-        </td>
-	  </tr>
-	<?php endforeach; ?>
-	</table>
-
+  <form action="jobentry.php" method="post">
+      <input type="submit" value="Back to Details" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+  </form>
   </div>
 
-  </div><br/>
+  <div class="container">
+    <form action="addevents.php" method="post">
+      <?php $newdate = date("Y-m-d"); ?>
+      Event: <input type="text" name="event" value="New Event">
+      Date: <input type="text" name="date" value="<?php echo $newdate; ?>"><br/>
+
+      <input type="submit" value="Save" />
+      <input type="hidden" name="processing" value=true />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form>
+  </div>
+
+  <?php if(!empty($msg))
+    echo $msg ?>
+
 
   <!-- CDN for JS bootstrap -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
