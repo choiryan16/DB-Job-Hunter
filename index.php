@@ -43,6 +43,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
 	case '/addapplication.php':
 		require 'addapplication.php';
 		break;
+	case '/removeapplication.php':
+		require 'removeapplication.php';
+		break;
     default:
         http_response_code(404);
         exit('Not Found');

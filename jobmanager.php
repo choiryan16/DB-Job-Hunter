@@ -54,7 +54,7 @@ $jobs = get_all_jobs($_SESSION["AID"]);
 <div class="container">
   <h1>Your Job Applications</h1>
 
-  <form action="addapplication.php">
+  <form action="addapplication.php", method="post">
       <input type="submit" name="detailbtn" value="Add New Application" class="btn btn-primary" />
     </form>
 
@@ -65,6 +65,7 @@ $jobs = get_all_jobs($_SESSION["AID"]);
 	    <th>Status</th>
 	    <th>Company</th>
 	    <th>Salary</th>
+	    <th>&nbsp</th>
 	    <th>&nbsp</th>
 	  </tr>
 	<?php foreach ($jobs as $job): ?>
@@ -84,6 +85,12 @@ $jobs = get_all_jobs($_SESSION["AID"]);
         <td>
           <form action="jobentry.php" method="post">
             <input type="submit" name="detailbtn" value="View Details" class="btn btn-primary" />
+            <input type="hidden" name="job" value="<?php echo $job["JID"] ?>" />
+          </form> 
+        </td>
+        <td>
+          <form action="removeapplication.php" method="post">
+            <input type="submit" name="detailbtn" value="Remove" class="btn btn-primary" />
             <input type="hidden" name="job" value="<?php echo $job["JID"] ?>" />
           </form> 
         </td>

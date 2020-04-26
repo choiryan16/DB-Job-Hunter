@@ -8,7 +8,7 @@ $msg = "";
 
 if (!empty($_POST["processing"])) {
   add_application($_POST["status"], $_POST["job_title"], $_POST["salary"], $_POST["benefits"], $_POST["location_street"], $_POST["location_city"], $_POST["location_state"], $_POST["job_requirements"], $_SESSION["AID"], $_POST["hiring_contact_email"]);
-  $msg = "Successfully created new application";
+  $msg = "Attempted to create new application";
 }
 ?>
 
@@ -63,19 +63,14 @@ if (!empty($_POST["processing"])) {
   <div class="container">
     <form action="addapplication.php" method="post">
 
-      Status (required):<br/>
-      <input type="radio" id="1" name="status" value=1>
-      <label for="1">1</label><br>
-      <input type="radio" id="2" name="status" value=2>
-      <label for="2">2</label><br>
-      <input type="radio" id="3" name="status" value=3>
-      <label for="3">3</label><br>
-      <input type="radio" id="4" name="status" value=4>
-      <label for="4">4</label><br>
-      <br/>
+      Status (required):<br>
+      <input type="radio" name="status" value="1" checked>1<br>
+      <input type="radio" name="status" value="2">2<br>
+      <input type="radio" name="status" value="3">3<br>
+      <input type="radio" name="status" value="4">4<br>
 
       Job Title (required): <input type="text" name="job_title" value=""><br/>
-      Salary: <input type="text" name="salary" value=""><br/>
+      Salary: <input type="text" name="salary" value="0"><br/>
       Benefits: <input type="text" name="benefits" value=""><br/>
       Job Requirements: <input type="text" name="job_requirements" value=""><br/>
 
