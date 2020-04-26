@@ -5,8 +5,10 @@ require("processupdate.php");
 
 if (!empty($_POST["job"]))
   $this_jid = $_POST["job"];
-else
-  echo "Something went wrong";
+else{
+  header("Location: jobmanager.php");
+  exit();
+}
 
 if (!empty($_POST["processing"])) {
   update_details($this_jid, $_POST["status"], $_POST["job_title"], $_POST["salary"], $_POST["benefits"], $_POST["location_street"], $_POST["location_city"], $_POST["location_state"], $_POST["job_requirements"]);

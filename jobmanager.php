@@ -3,7 +3,17 @@ session_start();
 require("connectdb.php");
 require("processdb.php");
 
-$jobs = get_all_jobs($_SESSION["AID"]);
+if (empty($_SESSION["AID"])) {
+	header("Location: login.php");
+	exit();
+}
+
+if (!empty($_POST["sort"])) {
+	$jobs = get_all_jobs($_SESSION["AID"], $_POST["sort"]);
+}
+else {
+	$jobs = get_all_jobs($_SESSION["AID"], 0);
+}
 ?>
 
 <!-- 1. create HTML5 doctype -->
@@ -26,12 +36,6 @@ $jobs = get_all_jobs($_SESSION["AID"]);
   <meta name="description" content="include some description about your page">  
     
   <title>Your Job Applications</title>
-
-  <div class="container">
-  <form action="mainpage.php">
-      <input type="submit" value="Back to Dashboard" />
-  </form>
-  </div>
   
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -52,19 +56,44 @@ $jobs = get_all_jobs($_SESSION["AID"]);
 
 <body>
 <div class="container">
-  <h1>Your Job Applications</h1>
+
+  <div class="container">
+	  <form action="mainpage.php">
+	      <input type="submit" value="Back to Dashboard" />
+	  </form>
+  </div>
+
+
+  <h1>Your Job Applications</h1><br>
 
   <form action="addapplication.php", method="post">
       <input type="submit" name="detailbtn" value="Add New Application" class="btn btn-primary" />
-    </form>
+    </form> <br><br>
+
+    <div class="container">
+    	<form action="jobmanager.php" method="post">
+	    	Sort by:
+	    	<input type="radio" name="sort" value="0">&nbspOrder&nbspAdded&nbsp
+	      	<input type="radio" name="sort" value="1">&nbspJob&nbspTitle&nbsp
+	      	<input type="radio" name="sort" value="2">&nbspStatus&nbsp
+	     	<input type="radio" name="sort" value="3">&nbspSalary&nbsp
+	     	<input type="radio" name="sort" value="4">&nbspState&nbsp
+	     	<input type="radio" name="sort" value="5">&nbspCompany&nbspName&nbsp
+	     	<input type="radio" name="sort" value="6">&nbspIndustry&nbsp
+
+	     	<input type="submit" name="sorted" value="Sort">
+     	</form>
+    </div>
 
   <div class="container">
   	<table border="1" width="60%">
 	  <tr>
 	    <th>Job Title</th>
 	    <th>Status</th>
-	    <th>Company</th>
 	    <th>Salary</th>
+	    <th>State</th>
+	    <th>Company</th>
+	    <th>Industry</th>
 	    <th>&nbsp</th>
 	    <th>&nbsp</th>
 	  </tr>
@@ -77,10 +106,16 @@ $jobs = get_all_jobs($_SESSION["AID"]);
 	  		<?php echo $job["status"]; ?>
 	  	</td>
 	  	<td>
-	  		<?php echo get_job_company($job["JID"])["company_name"]; ?>
+	  		<?php echo $job["salary"]; ?>
 	  	</td>
 	  	<td>
-	  		<?php echo $job["salary"]; ?>
+	  		<?php echo $job["location_state"]; ?>
+	  	</td>
+	  	<td>
+	  		<?php echo $job["company_name"]; ?>
+	  	</td>
+	  	<td>
+	  		<?php echo $job["industry"]; ?>
 	  	</td>
         <td>
           <form action="jobentry.php" method="post">

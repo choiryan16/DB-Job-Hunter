@@ -7,8 +7,10 @@ $msg = "";
 
 if (!empty($_POST["job"]))
   $this_jid = $_POST["job"];
-else
-  echo "Something went wrong";
+else {
+  header("Location: jobmanager.php");
+  exit();
+}
 
 if (!empty($_POST["processing"])) {
   add_event($this_jid, $_POST["event"], $_POST["date"]);

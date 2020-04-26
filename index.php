@@ -13,6 +13,12 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/login.php':
         require 'login.php';
         break;
+    case '/register.php':
+        require 'register.php';
+        break;
+    case '/logout.php':
+        require 'logout.php';
+        break;
     case '/mainpage.php':
     	require 'mainpage.php';
     	break;

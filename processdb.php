@@ -1,11 +1,10 @@
 <?php
 
-function check_login($username, $password_hash) {
+function get_login($username) {
 	global $db;
-	$query = "SELECT AID FROM users WHERE username = :username AND password_hash = :password_hash";
+	$query = "SELECT AID, password_hash FROM users WHERE username = :username";
 	$statement = $db->prepare($query);
 	$statement->bindValue(":username", $username);
-	$statement->bindValue(":password_hash", $password_hash); 
 
 	$statement->execute();
 	$results = $statement->fetch();
@@ -43,11 +42,27 @@ function get_jid_arr($aid) {
 	return $jid_arr;
 }
 
-function get_all_jobs($aid) {
+function get_all_jobs($aid, $sort) {
+	if ($sort == 1)
+		$parameter = "job_application.job_title";
+	else if ($sort == 2)
+		$parameter = "job_application.status";
+	else if ($sort == 3)
+		$parameter = "job_application.salary";
+	else if ($sort == 4)
+		$parameter = "job_application.location_state";
+	else if ($sort == 5)
+		$parameter = "company.company_name";
+	else if ($sort == 6)
+		$parameter = "company.industry";
+	else
+		$parameter = "job_application.JID";
+
 	global $db;
-	$query = "SELECT * FROM job_application WHERE AID = :aid";
+	$query = "SELECT JID, job_title, status, salary, location_state, company_name, industry FROM job_application NATURAL JOIN applies_to NATURAL JOIN company WHERE job_application.AID = :aid ORDER BY :parameter";
 	$statement = $db->prepare($query);
 	$statement->bindValue(":aid", $aid);
+	$statement->bindValue(":parameter", $parameter);
 
 	$statement->execute();
 	$jobs = $statement->fetchAll();

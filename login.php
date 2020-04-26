@@ -4,20 +4,26 @@ require("connectdb.php");
 require("processdb.php");
 
 $msg = "";
-$_SESSION["AID"] = 0;
 
-if (!empty($_POST['db-btn'])) {
-	if($_POST['db-btn'] == "Login")
-		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
-      $_SESSION["AID"] = check_login($_POST["username"], $_POST["password"])["AID"];
-      header("Location: mainpage.php");
-      exit();
+if (!empty($_POST["login-btn"])) {
+  if (!empty($_POST["username"]) && !empty($_POST["password"])) {
+    $creds = get_login($_POST["username"]);
+    if (empty($creds))
+      $msg = "Could not find a user with that username";
+    else {
+      if (password_verify($_POST["password"], $creds["password_hash"])) {
+        $_SESSION["AID"] = $creds["AID"];
+        header("Location: mainpage.php");
+        exit();
+      }
+      else {
+        $msg = "Incorrect password";
+      }
     }
-    else
-      $msg = "Enter username and password";
-	else
-		$msg = "Enter all fields before inserting";
-	}
+  }
+  else
+    $msg = "Enter all fields to login";
+}
 ?>
 
 <!-- 1. create HTML5 doctype -->
@@ -84,12 +90,16 @@ if (!empty($_POST['db-btn'])) {
   	<input type="password" class="form-control" name="password" />
   </div>
 
-<input type="submit" value="Login" class="btn btn-primary" name="db-btn" />
+<input type="submit" value="Login" class="btn btn-primary" name="login-btn" />
 
 <br/>
 <?php if($msg != "") echo $msg; ?>
 
 </form>
+
+  <form action="register.php">
+      <input type="submit" value="Register" class="btn btn-primary" name="register-btn" />
+  </form>
 
 </div>
 

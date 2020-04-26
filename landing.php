@@ -39,7 +39,7 @@
 <body>
 <div class="container">
   <h1>Welcome to Job Hunter!</h1>
-  <h2>To get started, <a href="login.php">log in</a> or register a new user account.</h2>
+  <h2>To get started, <a href="login.php">log in</a> or <a href="register.php">register</a> a new user account.</h2>
 
   <br/>
 

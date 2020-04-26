@@ -60,4 +60,49 @@ function add_application($status, $job_title, $salary, $benefits, $location_stre
 
 	$statement->closeCursor();
 }
+
+function add_applicant($name, $email, $mailing_address_street, $mailing_address_city, $mailing_address_state, $mailing_address_zip) {
+	global $db;
+	$query = "INSERT INTO applicant
+				  (name,
+				  email,
+				  mailing_address_street,
+				  mailing_address_city,
+				  mailing_address_state,
+				  mailing_address_zip)
+			  VALUES
+			  	  (:name,
+				  :email,
+				  :mailing_address_street,
+				  :mailing_address_city,
+				  :mailing_address_state,
+				  :mailing_address_zip)";
+	$statement = $db->prepare($query);
+	$statement->bindValue(":name", $name);
+	$statement->bindValue(":email", $email);
+	$statement->bindValue(":mailing_address_street", $mailing_address_street);
+	$statement->bindValue(":mailing_address_city", $mailing_address_city);
+	$statement->bindValue(":mailing_address_state", $mailing_address_state);
+	$statement->bindValue(":mailing_address_zip", $mailing_address_zip);
+
+	$statement->execute();
+
+	$statement->closeCursor();
+}
+
+function add_user($username, $password_hash) {
+	global $db;
+	$query = "INSERT INTO users
+				(username,
+				password_hash)
+			  VALUES
+			  	(:username,
+			  	:password_hash)";
+	$statement = $db->prepare($query);
+	$statement->bindValue(":username", $username);
+	$statement->bindValue(":password_hash", $password_hash);
+
+	$statement->execute();
+	$statement->closeCursor();
+}
 ?>

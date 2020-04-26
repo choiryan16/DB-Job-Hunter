@@ -3,6 +3,11 @@ session_start();
 require("connectdb.php");
 require("processdb.php");
 
+if (empty($_SESSION["AID"])) {
+	header("Location: login.php");
+	exit();
+}
+
 // pull data needed for dashboard
 
 // get job counts by status
@@ -85,6 +90,14 @@ endforeach;
 
 <body>
 <div class="container">
+
+	<div class="container">
+	<form action="logout.php">
+	    <input type="submit" value="Logout" />
+	</form>
+  </div>
+
+
   <h1>Dashboard</h1> <br/>
 
   <div class="container">

@@ -5,8 +5,10 @@ require("processdb.php");
 
 if (!empty($_POST["job"]))
   $this_jid = $_POST["job"];
-else
-  echo "Something went wrong";
+else {
+  header("Location: jobmanager.php");
+  exit();
+}
 
 $job_details = get_job_details($this_jid);
 $job_files = get_job_files($this_jid);
