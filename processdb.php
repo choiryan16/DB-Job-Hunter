@@ -42,36 +42,6 @@ function get_jid_arr($aid) {
 	return $jid_arr;
 }
 
-function get_all_jobs($aid, $sort) {
-	if ($sort == 1)
-		$parameter = "job_application.job_title";
-	else if ($sort == 2)
-		$parameter = "job_application.status";
-	else if ($sort == 3)
-		$parameter = "job_application.salary";
-	else if ($sort == 4)
-		$parameter = "job_application.location_state";
-	else if ($sort == 5)
-		$parameter = "company.company_name";
-	else if ($sort == 6)
-		$parameter = "company.industry";
-	else
-		$parameter = "job_application.JID";
-
-	global $db;
-	$query = "SELECT JID, job_title, status, salary, location_state, company_name, industry FROM job_application NATURAL JOIN applies_to NATURAL JOIN company WHERE job_application.AID = :aid ORDER BY :parameter";
-	$statement = $db->prepare($query);
-	$statement->bindValue(":aid", $aid);
-	$statement->bindValue(":parameter", $parameter);
-
-	$statement->execute();
-	$jobs = $statement->fetchAll();
-
-	$statement->closeCursor();
-
-	return $jobs;
-}
-
 function get_job_details($jid) {
 	global $db;
 	$query = "SELECT * FROM job_application WHERE JID = :jid";

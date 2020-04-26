@@ -1,7 +1,7 @@
 <?php
 session_start();
 require("connectdb.php");
-require("processdb.php");
+require("processsort.php");
 
 if (empty($_SESSION["AID"])) {
 	header("Location: login.php");
@@ -9,10 +9,31 @@ if (empty($_SESSION["AID"])) {
 }
 
 if (!empty($_POST["sort"])) {
-	$jobs = get_all_jobs($_SESSION["AID"], $_POST["sort"]);
+	switch ($_POST["sort"]) {
+		case 1:
+			$jobs = get_all_jobs_title($_SESSION["AID"]);
+			break;
+		case 2:
+			$jobs = get_all_jobs_status($_SESSION["AID"]);
+			break;
+		case 3:
+			$jobs = get_all_jobs_salary($_SESSION["AID"]);
+			break;
+		case 4:
+			$jobs = get_all_jobs_state($_SESSION["AID"]);
+			break;
+		case 5:
+			$jobs = get_all_jobs_company($_SESSION["AID"]);
+			break;
+		case 6:
+			$jobs = get_all_jobs_industry($_SESSION["AID"]);
+			break;
+		default:
+			$jobs = get_all_jobs_jid($_SESSION["AID"]);
+	}
 }
 else {
-	$jobs = get_all_jobs($_SESSION["AID"], 0);
+	$jobs = get_all_jobs_jid($_SESSION["AID"]);
 }
 ?>
 
