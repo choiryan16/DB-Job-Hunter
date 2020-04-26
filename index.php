@@ -19,6 +19,12 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/jobmanager.php':
     	require 'jobmanager.php';
     	break;
+    case '/jobentry.php':
+    	require 'jobentry.php';
+    	break;
+    case '/profile.php':
+    	require 'profile.php';
+    	break;
     default:
         http_response_code(404);
         exit('Not Found');

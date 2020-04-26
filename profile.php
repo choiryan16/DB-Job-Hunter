@@ -1,48 +1,11 @@
 <?php
 session_start();
 require("connectdb.php");
-require("processdb.php");
+require("processapplicant.php");
 
-// pull data needed for dashboard
-
-// get job counts by status
-$results = get_status($_SESSION["AID"]);
-$stat1 = 0;
-$stat2 = 0;
-$stat3 = 0;
-$stat4 = 0;
-
-foreach ($results as $application):
-	switch ($application["status"]) {
-		case 1:
-			$stat1++;
-			break;
-		case 2:
-			$stat2++;
-			break;
-		case 3:
-			$stat3++;
-			break;
-		case 4:
-			$stat4++;
-			break;
-		echo "Application with invalid status found";
-	}
-endforeach;
-
-// get events within some period
-$jid_arr = get_jid_arr($_SESSION["AID"]);
-
-$events = [];
-// in days
-$timeframe = 14;
-
-foreach ($jid_arr as $jid):
-	$tmp_event = get_events($jid["JID"], 0);
-	foreach ($tmp_event as $one_event):
-		array_push($events, $one_event);
-	endforeach;
-endforeach;
+$applicant_details = get_applicant_details($_SESSION["AID"]);
+$applicant_education = get_applicant_education($_SESSION["AID"]);
+$applicant_phones = get_applicant_phones($_SESSION["AID"]);
 ?>
 
 <!-- 1. create HTML5 doctype -->
@@ -64,7 +27,7 @@ endforeach;
   <meta name="author" content="your name">
   <meta name="description" content="include some description about your page">  
     
-  <title>Your Job Hunter Page</title>
+  <title>Your Profile</title>
   
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -85,67 +48,51 @@ endforeach;
 
 <body>
 <div class="container">
-  <h1>Dashboard</h1> <br/>
+  <h1>Your Profile</h1><br/>
 
   <div class="container">
-	<form action="profile.php">
-	    <input type="submit" value="View Profile" />
-	</form>
+  <form action="mainpage.php">
+      <input type="submit" value="Back to Dashboard" />
+  </form>
   </div>
 
   <div class="container">
-	<form action="jobmanager.php">
-	    <input type="submit" value="Go to Job Application Manager" />
-	</form>
+    <h2>Personal Information</h2><br/>
+
+    <p>Name: <?php echo $applicant_details["name"]; ?><br/>
+      Email: <?php echo $applicant_details["email"]; ?><br/>
+      Mailing Address:<br/>
+        Street: <?php echo $applicant_details["mailing_address_street"]; ?><br/>
+        City: <?php echo $applicant_details["mailing_address_city"]; ?><br/>
+        State: <?php echo $applicant_details["mailing_address_state"]; ?><br/>
+        Zip: <?php echo $applicant_details["mailing_address_zip"]; ?><br/>
+    </p>
   </div>
 
   <div class="container">
-  	<h3> Number of Job Applications </h3> <br/>
+    <h2>Phone Numbers</h2>
 
-	<table border="1" width="60%">
-	  <tr>     
-	    <th>Status</th>     
-	    <th>No. of Applications</th>
-	  </tr>
-	  <tr>
-	    <td align="center">Status 1</td>     
-	    <td align="right"><?php echo $stat1; ?></td>
-	  </tr>
-	  <tr>
-	    <td align="center">Status 2</td>
-	    <td align="right"><?php echo $stat2; ?></td>
-	  </tr>
-	  <tr>
-	    <td align="center">Status 3</td>
-	    <td align="right"><?php echo $stat3; ?></td>
-	  </tr>
-	  <tr>
-	    <td align="center">Status 4</td>
-	    <td align="right"><?php echo $stat4; ?></td>
-	  </tr>
-	</table>
-
+    <div class="container">
+      <p>
+        <?php foreach ($applicant_phones as $phone): ?>
+          <?php echo $phone["type"]; ?>: <?php echo $phone["phone_number"]; ?><br/>
+        <?php endforeach; ?>
+      </p>
+    </div>
   </div><br/>
 
   <div class="container">
-  	<h3> Upcoming events </h3> <br/>
+    <h2>Education History</h2>
 
-  	<table border="1" width="60%">
-	  <tr>
-	    <th>Date</th>     
-	    <th>Event</th>
-	  </tr>
-	<?php foreach ($events as $event): ?>
-	  <tr>
-	  	<td>
-	  		<?php echo $event["date"]; ?>
-	  	</td>
-	  	<td>
-	  		<?php echo $event["event"]; ?>
-	  	</td>
-	  </tr>
-	<?php endforeach; ?>
-	</table>
+    <div class="container">
+      <p>
+        <?php foreach ($applicant_education as $degree): ?>
+          Degree: <?php echo $degree["degree"]; ?><br/>
+          School: <?php echo $degree["school_name"]; ?><br/>
+          Transcript (not functional): <?php echo $degree["transcript"]; ?><br/><br/>
+        <?php endforeach; ?>
+      </p>
+    </div>
   </div>
 
 

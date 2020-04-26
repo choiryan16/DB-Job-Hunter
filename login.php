@@ -4,12 +4,12 @@ require("connectdb.php");
 require("processdb.php");
 
 $msg = "";
-$_SESSION["aid"] = 0;
+$_SESSION["AID"] = 0;
 
 if (!empty($_POST['db-btn'])) {
 	if($_POST['db-btn'] == "Login")
 		if (!empty($_POST["username"]) && !empty($_POST["password"])) {
-      $_SESSION["aid"] = check_login($_POST["username"], $_POST["password"])["AID"];
+      $_SESSION["AID"] = check_login($_POST["username"], $_POST["password"])["AID"];
       header("Location: mainpage.php");
       exit();
     }
@@ -84,7 +84,7 @@ if (!empty($_POST['db-btn'])) {
   	<input type="password" class="form-control" name="password" />
   </div>
 
-<input type="submit" value="Login" class="btn btn-dark" name="db-btn" />
+<input type="submit" value="Login" class="btn btn-primary" name="db-btn" />
 
 <br/>
 <?php if($msg != "") echo $msg; ?>
