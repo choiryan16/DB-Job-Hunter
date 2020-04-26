@@ -1,18 +1,25 @@
 <?php
-session_start();
 require("connectdb.php");
-require("processapplicant.php");
+require("processdb.php");
+require("processupdate.php");
 
-$applicant_details = get_applicant_details($_SESSION["AID"]);
-$applicant_education = get_applicant_education($_SESSION["AID"]);
-$applicant_phones = get_applicant_phones($_SESSION["AID"]);
+if (!empty($_POST["job"]))
+  $this_jid = $_POST["job"];
+else
+  echo "Something went wrong";
+
+if (!empty($_POST["processing"])) {
+  update_company($_POST["company"], $_POST["industry"], $_POST["city"], $_POST["state"], $_POST["company_name"]);
+}
+
+$job_company = get_job_company($this_jid);
 ?>
 
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">  
+  <meta charset="UTF-8">
   
   <!-- 2. include meta tag to ensure proper rendering and touch zooming -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +34,7 @@ $applicant_phones = get_applicant_phones($_SESSION["AID"]);
   <meta name="author" content="your name">
   <meta name="description" content="include some description about your page">  
     
-  <title>Your Profile</title>
+  <title>Update Company</title>.
   
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -48,52 +55,27 @@ $applicant_phones = get_applicant_phones($_SESSION["AID"]);
 
 <body>
 <div class="container">
+  <h1>Update Company</h1><br/>
 
   <div class="container">
-  <form action="mainpage.php">
-      <input type="submit" value="Back to Dashboard" />
+  <form action="jobentry.php" method="post">
+      <input type="submit" value="Back to Details" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
   </form>
   </div>
 
-  <h1>Your Profile</h1><br/>
-
   <div class="container">
-    <h2>Personal Information</h2><br/>
+    <form action="updatecompanydetail.php" method="post">
+      Company Name: <input type="text" name="company_name" value="<?php echo $job_company["company_name"]; ?>"><br/>
+      Industry: <input type="text" name="industry" value="<?php echo $job_company["industry"]; ?>"><br/>
+      City: <input type="text" name="city" value="<?php echo $job_company["city"]; ?>"><br/>
+      State: <input type="text" name="state" value="<?php echo $job_company["state"]; ?>"><br/>
 
-    <p>Name: <?php echo $applicant_details["name"]; ?><br/>
-      Email: <?php echo $applicant_details["email"]; ?><br/>
-      Mailing Address:<br/>
-        Street: <?php echo $applicant_details["mailing_address_street"]; ?><br/>
-        City: <?php echo $applicant_details["mailing_address_city"]; ?><br/>
-        State: <?php echo $applicant_details["mailing_address_state"]; ?><br/>
-        Zip: <?php echo $applicant_details["mailing_address_zip"]; ?><br/>
-    </p>
-  </div>
-
-  <div class="container">
-    <h2>Phone Numbers</h2>
-
-    <div class="container">
-      <p>
-        <?php foreach ($applicant_phones as $phone): ?>
-          <?php echo $phone["type"]; ?>: <?php echo $phone["phone_number"]; ?><br/>
-        <?php endforeach; ?>
-      </p>
-    </div>
-  </div><br/>
-
-  <div class="container">
-    <h2>Education History</h2>
-
-    <div class="container">
-      <p>
-        <?php foreach ($applicant_education as $degree): ?>
-          Degree: <?php echo $degree["degree"]; ?><br/>
-          School: <?php echo $degree["school_name"]; ?><br/>
-          Transcript (not functional): <?php echo $degree["transcript"]; ?><br/><br/>
-        <?php endforeach; ?>
-      </p>
-    </div>
+      <input type="submit" value="Save" />
+      <input type="hidden" name="processing" value=true />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+      <input type="hidden" name="company" value="<?php echo $job_company["cid"]; ?>">
+    </form>
   </div>
 
 

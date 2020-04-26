@@ -1,18 +1,25 @@
 <?php
-session_start();
 require("connectdb.php");
-require("processapplicant.php");
+require("processdb.php");
+require("processupdate.php");
 
-$applicant_details = get_applicant_details($_SESSION["AID"]);
-$applicant_education = get_applicant_education($_SESSION["AID"]);
-$applicant_phones = get_applicant_phones($_SESSION["AID"]);
+if (!empty($_POST["job"]))
+  $this_jid = $_POST["job"];
+else
+  echo "Something went wrong";
+
+if (!empty($_POST["processing"])) {
+  update_details($this_jid, $_POST["status"], $_POST["job_title"], $_POST["salary"], $_POST["benefits"], $_POST["location_street"], $_POST["location_city"], $_POST["location_state"], $_POST["job_requirements"]);
+}
+
+$job_details = get_job_details($this_jid);
 ?>
 
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">  
+  <meta charset="UTF-8">
   
   <!-- 2. include meta tag to ensure proper rendering and touch zooming -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +34,7 @@ $applicant_phones = get_applicant_phones($_SESSION["AID"]);
   <meta name="author" content="your name">
   <meta name="description" content="include some description about your page">  
     
-  <title>Your Profile</title>
+  <title>Update Job</title>
   
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -48,52 +55,32 @@ $applicant_phones = get_applicant_phones($_SESSION["AID"]);
 
 <body>
 <div class="container">
+  <h1>Update Job</h1><br/>
 
   <div class="container">
-  <form action="mainpage.php">
-      <input type="submit" value="Back to Dashboard" />
+  <form action="jobentry.php" method="post">
+      <input type="submit" value="Back to Details" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
   </form>
   </div>
 
-  <h1>Your Profile</h1><br/>
-
   <div class="container">
-    <h2>Personal Information</h2><br/>
+    <form action="updatejobdetail.php" method="post">
+      Job Title: <input type="text" name="job_title" value="<?php echo $job_details["job_title"]; ?>"><br/>
+      Status: <input type="text" name="status" value="<?php echo $job_details["status"]; ?>"><br/>
+      Salary: <input type="text" name="salary" value="<?php echo $job_details["salary"]; ?>"><br/>
+      Benefits: <input type="text" name="benefits" value="<?php echo $job_details["benefits"]; ?>"><br/>
+      Job Requirements: <input type="text" name="job_requirements" value="<?php echo $job_details["job_requirements"]; ?>"><br/>
 
-    <p>Name: <?php echo $applicant_details["name"]; ?><br/>
-      Email: <?php echo $applicant_details["email"]; ?><br/>
-      Mailing Address:<br/>
-        Street: <?php echo $applicant_details["mailing_address_street"]; ?><br/>
-        City: <?php echo $applicant_details["mailing_address_city"]; ?><br/>
-        State: <?php echo $applicant_details["mailing_address_state"]; ?><br/>
-        Zip: <?php echo $applicant_details["mailing_address_zip"]; ?><br/>
-    </p>
-  </div>
+      Location: <br/>
+      Street: <input type="text" name="location_street" value="<?php echo $job_details["location_street"]; ?>"><br/>
+      City: <input type="text" name="location_city" value="<?php echo $job_details["location_city"]; ?>"><br/>
+      State: <input type="text" name="location_state" value="<?php echo $job_details["location_state"]; ?>"><br/>
 
-  <div class="container">
-    <h2>Phone Numbers</h2>
-
-    <div class="container">
-      <p>
-        <?php foreach ($applicant_phones as $phone): ?>
-          <?php echo $phone["type"]; ?>: <?php echo $phone["phone_number"]; ?><br/>
-        <?php endforeach; ?>
-      </p>
-    </div>
-  </div><br/>
-
-  <div class="container">
-    <h2>Education History</h2>
-
-    <div class="container">
-      <p>
-        <?php foreach ($applicant_education as $degree): ?>
-          Degree: <?php echo $degree["degree"]; ?><br/>
-          School: <?php echo $degree["school_name"]; ?><br/>
-          Transcript (not functional): <?php echo $degree["transcript"]; ?><br/><br/>
-        <?php endforeach; ?>
-      </p>
-    </div>
+      <input type="submit" value="Save" />
+      <input type="hidden" name="processing" value=true />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form>
   </div>
 
 

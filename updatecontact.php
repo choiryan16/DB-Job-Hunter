@@ -1,18 +1,29 @@
 <?php
-session_start();
 require("connectdb.php");
-require("processapplicant.php");
+require("processdb.php");
+require("processupdate.php");
 
-$applicant_details = get_applicant_details($_SESSION["AID"]);
-$applicant_education = get_applicant_education($_SESSION["AID"]);
-$applicant_phones = get_applicant_phones($_SESSION["AID"]);
+if (!empty($_POST["job"]))
+  $this_jid = $_POST["job"];
+else
+  echo "Something went wrong";
+
+if (!empty($_POST["processing"])) {
+  update_contact_name($_POST["email"], $_POST["name"]);
+  foreach ($_POST["types"] as $key => $i) {
+    update_contact_phone($_POST["email"], $i, $_POST["phones"][$key], $_POST["old_phones"][$key]);
+  }
+}
+
+$job_contact = get_job_contact_details($this_jid);
+$job_contact_phones = get_contact_phones($job_contact["email"]);
 ?>
 
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">  
+  <meta charset="UTF-8">
   
   <!-- 2. include meta tag to ensure proper rendering and touch zooming -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,7 +38,7 @@ $applicant_phones = get_applicant_phones($_SESSION["AID"]);
   <meta name="author" content="your name">
   <meta name="description" content="include some description about your page">  
     
-  <title>Your Profile</title>
+  <title>Update Contact</title>.
   
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -48,52 +59,34 @@ $applicant_phones = get_applicant_phones($_SESSION["AID"]);
 
 <body>
 <div class="container">
+  <h1>Update Contact</h1><br/>
 
   <div class="container">
-  <form action="mainpage.php">
-      <input type="submit" value="Back to Dashboard" />
+  <form action="jobentry.php" method="post">
+      <input type="submit" value="Back to Details" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
   </form>
   </div>
 
-  <h1>Your Profile</h1><br/>
-
   <div class="container">
-    <h2>Personal Information</h2><br/>
-
-    <p>Name: <?php echo $applicant_details["name"]; ?><br/>
-      Email: <?php echo $applicant_details["email"]; ?><br/>
-      Mailing Address:<br/>
-        Street: <?php echo $applicant_details["mailing_address_street"]; ?><br/>
-        City: <?php echo $applicant_details["mailing_address_city"]; ?><br/>
-        State: <?php echo $applicant_details["mailing_address_state"]; ?><br/>
-        Zip: <?php echo $applicant_details["mailing_address_zip"]; ?><br/>
-    </p>
-  </div>
-
-  <div class="container">
-    <h2>Phone Numbers</h2>
-
-    <div class="container">
-      <p>
-        <?php foreach ($applicant_phones as $phone): ?>
-          <?php echo $phone["type"]; ?>: <?php echo $phone["phone_number"]; ?><br/>
+    <form action="updatecontact.php" method="post">
+      (Currently Uneditable) Email: <?php echo $job_contact["email"]; ?><br/>
+      Name: <input type="text" name="name" value="<?php echo $job_contact["name"]; ?>"><br/>
+      Phone Numbers: <br/>
+        <?php foreach ($job_contact_phones as $phone): ?>
+          <?php $old_phone = $phone["phone_number"]; ?>
+          Type: <input type="text" name="types[]" value="<?php echo $phone["type"]; ?>">
+          Phone: <input type="text" name="phones[]" value="<?php echo $phone["phone_number"]; ?>"><br/>
+          <input type="hidden" name="old_phones[]" value="<?php echo $old_phone; ?>">
         <?php endforeach; ?>
       </p>
-    </div>
-  </div><br/>
 
-  <div class="container">
-    <h2>Education History</h2>
-
-    <div class="container">
-      <p>
-        <?php foreach ($applicant_education as $degree): ?>
-          Degree: <?php echo $degree["degree"]; ?><br/>
-          School: <?php echo $degree["school_name"]; ?><br/>
-          Transcript (not functional): <?php echo $degree["transcript"]; ?><br/><br/>
-        <?php endforeach; ?>
-      </p>
-    </div>
+      <input type="submit" value="Save" />
+      <input type="hidden" name="processing" value=true />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+      <input type="hidden" name="phone_count" value="<?php echo $phone_count; ?>">
+      <input type="hidden" name="email" value="<?php echo $job_contact["email"]; ?>">
+    </form>
   </div>
 
 

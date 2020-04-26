@@ -64,20 +64,26 @@ $job_company = get_job_company($this_jid);
   </div>
 
   <div class="container">
-    <h1>Job Details for: <?php echo $job_details["job_title"]; ?></h1> <br/>
+    <h1>Job Details for: <?php echo $job_details["job_title"]; ?></h1>
+
+    <form action="updatejobdetail.php" method="post">
+      <input type="submit" name="detailbtn" value="Edit" class="btn btn-primary" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form>
+
+    <br/>
 
     <h3>Status: <?php echo $job_details["status"]; ?></h3> <br/>
 
     <p>Salary: <?php echo $job_details["salary"]; ?><br/>
-       Benefits: <?php echo $job_details["benefits"]; ?><br/><br/>
+       Benefits: <?php echo $job_details["benefits"]; ?><br/>
+        Job Requirements: <br/>
+        <?php echo $job_details["benefits"]; ?><br/><br/>
 
        Location: <br/>
           Street: <?php echo $job_details["location_street"]; ?><br/>
           City: <?php echo $job_details["location_city"]; ?><br/>
           State: <?php echo $job_details["location_state"]; ?><br/><br/>
-
-        Job Requirements: <br/>
-        <?php echo $job_details["benefits"]; ?>
       </p>
   </div>
 
@@ -97,6 +103,11 @@ $job_company = get_job_company($this_jid);
 
   <div class="container">
     <h2>Job Events</h2>
+
+    <form action="updateevents.php" method="post">
+      <input type="submit" name="detailbtn" value="Edit" class="btn btn-primary" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form>
 
     <div class="container">
       <h3> Upcoming events </h3>
@@ -123,6 +134,11 @@ $job_company = get_job_company($this_jid);
   <div class="container">
     <h2>Hiring Contact</h2>
 
+    <form action="updatecontact.php" method="post">
+      <input type="submit" name="detailbtn" value="Edit" class="btn btn-primary" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form> Cannot currently edit emails
+
     <p> Name: <?php echo $job_contact["name"]; ?><br/>
     Email: <?php echo $job_contact["email"]; ?><br/>
     Phone Numbers: <br/>
@@ -134,6 +150,11 @@ $job_company = get_job_company($this_jid);
 
   <div class="container">
     <h2>Company Information</h2>
+
+    <form action="updatejobcompany.php" method="post">
+      <input type="submit" name="detailbtn" value="Edit" class="btn btn-primary" />
+      <input type="hidden" name="job" value="<?php echo $this_jid ?>" />
+    </form>
 
     <p> Company Name: <?php echo $job_company["company_name"]; ?><br/>
       Industry: <?php echo $job_company["industry"]; ?><br/>

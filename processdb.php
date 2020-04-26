@@ -125,7 +125,7 @@ function get_contact_phones($email) {
 function get_events($jid, $timeframe) {
 	global $db;
 	if ($timeframe == 0) {
-		$query = "SELECT event, date FROM job_application_important_dates WHERE JID = :jid ORDER BY date";
+		$query = "SELECT event, date FROM job_application_important_dates WHERE JID = :jid AND date > DATE_SUB(CURDATE(), INTERVAL 1 DAY) ORDER BY date";
 		$statement = $db->prepare($query);
 		$statement->bindValue(":jid", $jid);
 

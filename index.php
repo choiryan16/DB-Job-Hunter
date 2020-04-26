@@ -25,6 +25,18 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/profile.php':
     	require 'profile.php';
     	break;
+	case '/updatejobdetail.php':
+		require'updatejobdetail.php';
+		break;
+	case '/updatecontact.php':
+		require 'updatecontact.php';
+		break;
+	case '/updatejobcompany.php':
+		require 'updatejobcompany.php';
+		break;
+	case '/updateevents.php':
+		require 'updateevents.php';
+		break;
     default:
         http_response_code(404);
         exit('Not Found');
